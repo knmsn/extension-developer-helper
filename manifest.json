@@ -5,7 +5,7 @@
   "description": "Ferramentas para serem usadas pelos desenvolvedores no dia a dia.",
   "permissions": ["activeTab", "scripting", "tabs", "storage"],
   "background": {
-    "service_worker": "./src/service-worker.js"
+    "service_worker": "./service-worker.js"
   },
   "host_permissions": [
     "<all_urls>"
@@ -14,8 +14,8 @@
     "default_popup": "index.html"
   },
   "icons": {
-    "16": "./src/assets/killua.png",
-    "48": "./src/assets/killua.png",
-    "128": "./src/assets/killua.png"
+    "16": "./assets/killua.png",
+    "48": "./assets/killua.png",
+    "128": "./assets/killua.png"
   }
 }

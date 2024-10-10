@@ -61,12 +61,12 @@ function pasteFormValues(formId) {
 }
 
 
+
 function springLogStyle() {
     const bootstrapCssImportTag = document.createElement('link');
     bootstrapCssImportTag.rel = 'stylesheet';
     bootstrapCssImportTag.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css';
     document.head.appendChild(bootstrapCssImportTag);
-
 
     const logContainer = document.querySelector('pre');
     if (!logContainer) {
@@ -74,47 +74,83 @@ function springLogStyle() {
         return;
     }
 
-    const logText = logContainer.innerText;
+    const log = logContainer.innerText;
     logContainer.remove();
-    const logLines = logText.split('\n');
+
     const accordion = document.createElement('div');
     accordion.classList.add('accordion');
     accordion.id = 'accordion';
 
+    const logPattern = /(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}\.\d{3})\s+(ERROR|WARN|INFO)\s+(\d+) --- (\[.*?\]) (.*?)\s+:\s+([\s\S]*?)(?=\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}\s+(ERROR|WARN|INFO)|$)/g;
+
+    let matches;
+    const result = [];
+
+    while ((matches = logPattern.exec(log)) !== null) {
+        const date = matches[1];
+        const time = matches[2];
+        const type = matches[3];
+        const source = matches[6];
+        const details = matches[7].trim();
+        
+        result.push({
+            date,
+            time,
+            type,
+            source,
+            details
+        });
+    }
+
     document.body.appendChild(accordion);
-    logLines.forEach(() => {
-        const accordion = document.getElementById('accordion');
+
+    result.forEach((logEntry, index) => {
         const card = document.createElement('div');
         card.classList.add('accordion-item');
+
         const cardHeader = document.createElement('div');
         cardHeader.classList.add('accordion-header');
-        cardHeader.id = `heading${accordion.children.length + 1}`;
+        cardHeader.id = `heading${index + 1}`;
+        
         const h5 = document.createElement('h5');
         h5.classList.add('mb-0');
+        
         const button = document.createElement('button');
-        button.classList.add('accordion-button');
+        button.classList.add('accordion-button', 'collapsed');
         button.setAttribute('data-bs-toggle', 'collapse');
-        button.setAttribute('data-bs-target', `#collapse${accordion.children.length + 1}`);
+        button.setAttribute('data-bs-target', `#collapse${index + 1}`);
         button.setAttribute('aria-expanded', 'false');
-        button.setAttribute('aria-controls', `collapse${accordion.children.length + 1}`);
-        button.textContent = `Collapsible Group Item #${accordion.children.length + 1}`;
+        button.setAttribute('aria-controls', `collapse${index + 1}`);
+        
+        button.textContent = `${logEntry.type}: ${logEntry.source}`;
+        
         h5.appendChild(button);
         cardHeader.appendChild(h5);
+        
         const collapseDiv = document.createElement('div');
-        collapseDiv.id = `collapse${accordion.children.length + 1}`;
+        collapseDiv.id = `collapse${index + 1}`;
         collapseDiv.classList.add('accordion-collapse', 'collapse');
         collapseDiv.setAttribute('aria-labelledby', cardHeader.id);
         collapseDiv.setAttribute('data-bs-parent', '#accordion');
+        
         const cardBody = document.createElement('div');
         cardBody.classList.add('accordion-body');
-        cardBody.textContent = "Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod...";
+        cardBody.innerHTML = `
+            <strong>Data:</strong> ${logEntry.date}<br>
+            <strong>Hora:</strong> ${logEntry.time}<br>
+            <strong>Tipo:</strong> ${logEntry.type}<br>
+            <strong>Fonte:</strong> ${logEntry.source}<br>
+            <strong>Detalhes:</strong> ${logEntry.details}
+        `;
+        
         collapseDiv.appendChild(cardBody);
         card.appendChild(cardHeader);
         card.appendChild(collapseDiv);
         accordion.appendChild(card);
     });
-
 }
+
+
 
 function removeSpringLogStyle() {
     const logContainer = document.querySelector('pre');
