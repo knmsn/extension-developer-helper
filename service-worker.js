@@ -61,7 +61,6 @@ function pasteFormValues(formId) {
 }
 
 
-
 function springLogStyle() {
     const bootstrapCssImportTag = document.createElement('link');
     bootstrapCssImportTag.rel = 'stylesheet';
@@ -70,7 +69,7 @@ function springLogStyle() {
 
     const logContainer = document.querySelector('pre');
     if (!logContainer) {
-        console.error('Container do log não encontrado.');
+        alert("Esta não é uma pagina de log.")
         return;
     }
 
@@ -121,6 +120,15 @@ function springLogStyle() {
         button.setAttribute('data-bs-target', `#collapse${index + 1}`);
         button.setAttribute('aria-expanded', 'false');
         button.setAttribute('aria-controls', `collapse${index + 1}`);
+
+        if (logEntry.type === 'ERROR') {
+            button.style.backgroundColor = '#f8d7da';
+            button.style.fontWeight = 'bold';
+        } else if (logEntry.type === 'WARN') {
+            button.style.backgroundColor = '#fff3cd';
+        } else if (logEntry.type === 'INFO') {
+            button.style.backgroundColor = '#d1ecf1';
+        }
         
         button.textContent = `${logEntry.type}: ${logEntry.source}`;
         
@@ -149,6 +157,7 @@ function springLogStyle() {
         accordion.appendChild(card);
     });
 }
+
 
 
 
