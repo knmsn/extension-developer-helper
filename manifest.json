@@ -1,0 +1,21 @@
+{
+  "name": "KOE - Developer Assistent",
+  "manifest_version": 3,
+  "version": "0.0.1",
+  "description": "Ferramentas para serem usadas pelos desenvolvedores no dia a dia.",
+  "permissions": ["activeTab", "scripting", "tabs", "storage"],
+  "background": {
+    "service_worker": "./src/service-worker.js"
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "icons": {
+    "16": "./src/assets/killua.png",
+    "48": "./src/assets/killua.png",
+    "128": "./src/assets/killua.png"
+  }
+}
